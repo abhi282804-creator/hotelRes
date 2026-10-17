@@ -1,113 +1,227 @@
-🏨 ACCOMO — Modern Hotel Booking System (Java Edition)
-Hey, r/learnprogramming, r/java, r/StudentsWhoCode, and hotel tech enthusiasts — check out ACCOMO! We built a full-stack Java hotel reservation platform with a snazzy UI, real-time features, and secure backend magic. Whether you just want a simple getaway or manage a five-star palace, ACCOMO is here to show how elegant code can make traveling (or just room management) truly accommodating.
+# ACCOMO — Hotel Reservation System
 
-🚀 TL;DR
-What is it?: Java-powered hotel management & booking app with a slick, user-friendly interface.
+A full-stack hotel reservation web application built to support hotel discovery, room selection, reservation management, and payment workflows. The project modernizes a legacy Java web application with a React and TypeScript frontend while preserving the existing Java Servlet and MySQL backend.
 
-Who’s it for?: Anyone — solo backpackers, groups, hotel managers, and devs looking for an awesome project reference.
+> **Project type:** Academic team project  
+> **My contribution:** Full-stack development and database integration  
+> **Status:** Core application implemented; deployment and some integration details may require environment-specific configuration.
 
-Coolest features?: Live room availability, secure handling (using multithreaded Java and MySQL), payments, admin dashboard, and filtering galore.
+## Table of Contents
 
-Source code coming soon — but feast your eyes on what it does below!
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Technology Stack](#technology-stack)
+- [Architecture](#architecture)
+- [Getting Started](#getting-started)
+- [Configuration](#configuration)
+- [API Integration](#api-integration)
+- [Database](#database)
+- [Project Structure](#project-structure)
+- [Security and Reliability Notes](#security-and-reliability-notes)
+- [Roadmap](#roadmap)
+- [Author Contribution](#author-contribution)
 
-🎯 Project Highlights:
-Search hotels by price, category, and location
+## Overview
 
-Detailed hotel pages — all the info, images, and amenities you need
+ACCOMO is a hotel reservation system designed to make the booking journey easier for customers. Users can explore hotels, review hotel details, filter and sort available options, enter stay details, and manage reservation-related workflows.
 
-Sign up/Login — yes, you get an account and can view your bookings
+The application combines a modern React interface with a Java Servlet/JDBC backend and MySQL persistence. The migration approach is intended to introduce JSON API endpoints for the React client while keeping the existing JSP-based workflows available during the transition.
 
-Booking rooms in real time — no overbooking disasters here
+## Key Features
 
-Payment gateway support (credit/debit/UPI/QR scan)
+- **Hotel discovery:** Browse hotel listings and view hotel information and images.
+- **Search and filtering:** Filter hotels by category and price, with sorting options.
+- **Hotel details:** View details before starting a reservation.
+- **Reservation flow:** Enter check-in/check-out dates, guest and room details, and special requests.
+- **Price calculation:** Display reservation pricing based on selected booking details.
+- **Authentication:** Customer sign-up and login workflows.
+- **Reservation management:** Reservation confirmation, history, and cancellation workflows.
+- **Payment workflow:** Payment flow designed to support UPI, QR-code, and card options.
+- **Legacy compatibility:** Preserve existing JSP/form behavior while adding JSON endpoints for the React frontend.
 
-Admin powers: Manage hotels, rooms, and pricing (with dynamic updates)
+*Feature availability can depend on the current backend integration and local configuration. This README does not claim that the application is publicly deployed.*
 
-Mobile-friendly design: Runs great on desktop, tablet, or phone
+## Technology Stack
 
-Secure guest data & booking history
+| Layer | Technologies |
+|---|---|
+| Frontend | React 18, TypeScript, Vite, Tailwind CSS, React Router |
+| Backend | Java, Jakarta/Java EE Servlets, JavaBeans, JDBC |
+| Database | MySQL |
+| Application server | Apache Tomcat |
+| Development tools | Visual Studio Code, Git, GitHub |
 
-Scalable: Built for a boutique inn and a sprawling chain
+## Architecture
 
-🖼️ UI Glimpse 
+```text
+React + TypeScript + Tailwind CSS
+                |
+                | HTTP requests / JSON
+                v
+       Java Servlet API layer
+                |
+                v
+         DAO / JDBC layer
+                |
+                v
+             MySQL
+```
 
- main landing page — big search bar, hotel listings, cool filters.
-<img width="940" height="440" alt="image" src="https://github.com/user-attachments/assets/6ca0d2ad-f5ef-4eb7-b715-ed4157672410" />
+The frontend is intended to communicate with JSON API servlets under `/api/*`. The backend continues to use the existing servlet, DAO, JavaBean, and database layers. This incremental approach aims to reduce disruption to existing JSP functionality while the frontend is modernized.
 
-Sign-Up / Login Page
+## Getting Started
 
-<img width="940" height="765" alt="image" src="https://github.com/user-attachments/assets/08b70745-fb91-4c8c-9270-3102c1cedd7b" />
+### Prerequisites
 
-<img width="940" height="405" alt="image" src="https://github.com/user-attachments/assets/47d3de1a-8dd8-409c-bdb4-68468ca08039" />
+Install and configure the following:
 
+- Java Development Kit (JDK)
+- Apache Tomcat compatible with the project's servlet APIs
+- MySQL Server
+- Node.js and npm
+- Git
 
-Hotel Details Page
-<img width="940" height="921" alt="image" src="https://github.com/user-attachments/assets/9bdd8e9c-8266-4635-9841-6f0ff4a08cb3" />
-<img width="940" height="735" alt="image" src="https://github.com/user-attachments/assets/9633d759-fe61-403d-ab64-f7c6b02fbf50" />
+Exact versions and configuration may vary with the checked-out project revision.
 
+### 1. Clone the repository
 
+```bash
+git clone <YOUR_REPOSITORY_URL>
+cd <YOUR_REPOSITORY_DIRECTORY>
+```
 
-Reservation / Payment Flow
-<img width="855" height="730" alt="image" src="https://github.com/user-attachments/assets/850d2ca9-91aa-47e3-a683-78fd6c0202fa" />
+Replace the placeholders with the actual GitHub repository URL and directory name.
 
-Booking forms, calendar pickers, payment popups, QR scanner screens — don’t forget your awesome confirmations and cancellation screens!
-<img width="940" height="984" alt="image" src="https://github.com/user-attachments/assets/f571c5bb-a381-4f41-85a8-e19c040853ed" />
-<img width="940" height="612" alt="image" src="https://github.com/user-attachments/assets/aa4317aa-2ab3-4e52-b417-0351dd992702" />
+### 2. Configure the database
 
+1. Start MySQL.
+2. Create the application database (the development database has been named `hotel`).
+3. Import the SQL schema or backup available with your project, if included.
+4. Configure the database connection settings used by the Java application.
+5. Ensure the database user has only the permissions the application needs.
 
-🛠️ Core Tech Stack:
-Backend: Java (Servlets, Beans, DAO pattern), Apache Tomcat
+Do not commit real database passwords or production credentials.
 
-Frontend: HTML, CSS, JavaScript — styled for comfort, coded for speed
+### 3. Start the Java backend
 
-Database: MySQL (ACID-compliant, relational, robust)
+1. Open the Java web application in your IDE.
+2. Check the JDBC driver and database connection configuration.
+3. Build the web application and deploy the generated WAR or web application directory to the configured Tomcat instance.
+4. Start Tomcat and check its logs for deployment or database connection errors.
 
-Security: OAuth and JWT tokens, validation, encryption
+The exact build and deployment commands depend on the repository's current build configuration.
 
-Payment Integration: Credit/Debit card & UPI support — QR code features rock!
+### 4. Start the React frontend
 
-Multithreading: No lag with many guests or bookings
+Open a terminal in the frontend directory:
 
-IDE of choice: IntelliJ IDEA or Eclipse — take your pick!
+```bash
+npm install
+npm run dev
+```
 
-🧩 How Does It Work?
-Homepage — search, filter, and pick your favorite stay.
+Vite prints the local development URL in the terminal. Open that URL in your browser.
 
-Sign Up/Login — simple forms with instant validation and security.
+If the frontend requires an API base URL, configure it using the environment variable expected by the frontend source. Do not assume a variable name without checking the project configuration.
 
-Hotel Details — check reviews, amenities, images, and ratings.
+## Configuration
 
-Book a Room — enter dates, guests, room type, and special requests.
+Before running the application, verify:
 
-Payment — select a method (Card/UPI/QR scan), confirm, and get your booking!
+- MySQL is running and the configured port matches your local installation.
+- The database name, username, and password match your local MySQL configuration.
+- Tomcat is using a compatible servlet API version.
+- The frontend's API base URL points to the backend.
+- Cross-origin requests and session cookies are configured correctly if the frontend and backend run on different origins.
 
-Admin Module — for hotel staff: room updates, pricing tweaks, and live stats.
+Use local environment files or server-side configuration for secrets. Keep `.env` files containing real credentials out of Git.
 
-All wrapped up in modern architecture — RESTful APIs, fast database queries, and robust error handling.
+## API Integration
 
-✨ Why Build ACCOMO?
-Tired of clunky hotel forms and sketchy booking engines? So are we!
+The modernization plan uses JSON endpoints under `/api/*` while retaining legacy JSP/form workflows. The intended API areas include:
 
-“ACCOMO” means accommodation made simple — for staff and guests alike.
+| API area | Purpose |
+|---|---|
+| Hotels | Hotel listings, details, filtering, and sorting |
+| Authentication | Customer registration and login |
+| Reservations | Availability checks, booking submission, confirmation, history, and cancellation |
+| Payments | Payment-related workflow |
 
-Java’s power meets real-world hotel needs: speed, reliability, security.
+Endpoint paths, HTTP methods, request schemas, and response formats should be verified against the current servlet implementation before being documented as a stable public API.
 
-✅ Future Upgrades — Stay Tuned
-AI-powered recommendations (next-level, personalized results)
+## Database
 
-Multilingual support for a true global audience
+The application uses MySQL for customer, hotel, reservation, and payment-related data. The project has used tables including `customers`, `reservations`, `reservation1`, and `payments`; confirm the schema in the current database scripts before applying migrations.
 
-Dynamic pricing models (think: hotel surge hours!)
+For local development:
 
-Better mobile experience — maybe a native Android/iOS app? 🤔
+- Use a dedicated development database.
+- Keep database credentials out of source control.
+- Back up the database before schema changes.
+- Use parameterized JDBC statements for user-supplied values.
+- Avoid putting real customer information into screenshots, sample data, or commits.
 
- Want to Build This Yourself?
-Clone the repo 
+## Project Structure
 
-Install Java, MySQL, and your favorite IDE
+The repository combines a React frontend with a Java web application. Directory names may differ by branch; a typical logical layout is:
 
-Import the source
+```text
+ACCOMO/
+├── frontend/          # React + TypeScript client
+├── src/               # Java web application source
+│   ├── servlets/      # HTTP / API request handling
+│   ├── dao/           # Database access
+│   └── beans/         # JavaBeans / data models
+├── webapp/            # JSP pages and web resources
+├── database/          # SQL scripts, if included
+└── README.md
+```
 
-Run Apache Tomcat server, connect DB, and go!
+Treat this as a conceptual layout rather than a guaranteed exact directory tree; adjust it to match the repository's actual files.
 
-Don’t forget to add your own hotel images and UI screenshots to this README
+## Security and Reliability Notes
+
+- Never commit passwords, database credentials, session secrets, API keys, or private environment files.
+- Hash passwords using a suitable password-hashing algorithm; never store plaintext passwords.
+- Validate request data on the server, even when the frontend also validates it.
+- Use prepared statements for database operations.
+- Enforce authorization on reservation history, cancellation, and payment-related endpoints.
+- Configure session cookies and CORS carefully when frontend and backend origins differ.
+- Test payment flows with sandbox/test credentials only; do not claim real payment processing unless it is implemented and verified.
+
+## Roadmap
+
+- Complete and verify the React-to-Servlet API integration.
+- Validate all hotel search, booking, authentication, and reservation-management flows end to end.
+- Improve API documentation with exact endpoints and example payloads.
+- Add automated tests for core reservation and authentication workflows.
+- Add screenshots or a short demo once the application is running reliably.
+- Document reproducible build and deployment steps.
+
+## Author Contribution
+
+This was developed as an academic team project. My contribution focused on **full-stack development and database integration**, including work across the React/TypeScript interface and the Java/MySQL application layers.
+
+### Suggested resume entry
+
+**ACCOMO — Hotel Reservation System** | React, TypeScript, Tailwind CSS, Java Servlets, JDBC, MySQL, Tomcat
+
+- Developed a full-stack hotel reservation application with hotel browsing, filtering, hotel details, and reservation workflows.
+- Worked across the React/TypeScript frontend and Java Servlet/JDBC backend, integrating application data with MySQL.
+- Supported an incremental modernization approach by introducing JSON API endpoints while preserving legacy JSP workflows.
+
+---
+
+## Screenshots and Demo
+
+Add screenshots here after capturing them from a working local build. Only include features that have been tested in the current version.
+
+```text
+docs/
+└── screenshots/
+    ├── home.png
+    ├── hotel-listing.png
+    └── reservation-flow.png
+```
+
+If a public demo is available later, add its verified URL here.
