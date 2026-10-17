@@ -10,6 +10,7 @@ public class ConfirmReservationBean {
     private int guests;
     private String roomType;
     private String specialRequests;
+    private String hotelName;
 
     // Getters and Setters
     public String getReservationId() {
@@ -82,5 +83,13 @@ public class ConfirmReservationBean {
 
     public void setSpecialRequests(String specialRequests) {
         this.specialRequests = specialRequests;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
     }
 }

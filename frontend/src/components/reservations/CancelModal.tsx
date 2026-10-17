@@ -54,7 +54,7 @@ export const CancelModal: React.FC<CancelModalProps> = ({
           >
             No, Go Back
           </button>
-          
+
           <button
             onClick={onConfirm}
             disabled={cancelling}

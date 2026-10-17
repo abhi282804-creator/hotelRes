@@ -1,15 +1,11 @@
 package com.dao;
 
 import com.bean.ConfirmReservationBean;
+import com.util.DBConnection;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
 public class ConfirmReservationDao {
-
-    private static final String URL = "jdbc:mysql://localhost:3306/hotel";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "NewPassword123!";
 
     public boolean saveReservation(ConfirmReservationBean reservation) {
 
@@ -19,20 +15,8 @@ public class ConfirmReservationDao {
 
         try {
 
-            // Diagnostic information
-            System.out.println("=== CONFIRM DAO DB TEST ===");
-            System.out.println("URL = " + URL);
-            System.out.println("USERNAME = " + USERNAME);
-            System.out.println("PASSWORD LENGTH = " + PASSWORD.length());
-
-            // Connect to MySQL
-            conn = DriverManager.getConnection(
-                    URL,
-                    USERNAME,
-                    PASSWORD
-            );
-
-            System.out.println("=== CONFIRM DAO DB CONNECTION SUCCESS ===");
+            // Connect to MySQL via centralized DBConnection
+            conn = DBConnection.getConnection();
 
             // Insert reservation
             String query =
@@ -75,7 +59,7 @@ public class ConfirmReservationDao {
                 }
 
                 if (conn != null) {
-                    conn.close();
+                    DBConnection.closeConnection(conn);
                 }
 
             } catch (Exception e) {

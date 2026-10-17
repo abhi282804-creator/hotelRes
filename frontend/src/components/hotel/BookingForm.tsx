@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { RoomType } from '../../types';
 import { RoomTypePicker } from './RoomTypePicker';
 import { reservationService } from '../../services/reservationService';
+import { useAuth } from '../../context/AuthContext';
 import { Calendar, Users, FileText, AlertCircle, ArrowRight, ShieldCheck } from 'lucide-react';
 
 interface BookingFormProps {
@@ -12,6 +13,7 @@ interface BookingFormProps {
 
 export const BookingForm: React.FC<BookingFormProps> = ({ hotelId, hotelName }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   // Form state
   const [checkin, setCheckin] = useState<string>('');
@@ -71,8 +73,10 @@ export const BookingForm: React.FC<BookingFormProps> = ({ hotelId, hotelName }) 
     setLoading(true);
 
     try {
-      // Generate customerId ("C"+5 digits) and roomId (3 digits)
-      const randomCust = 'C' + String(Math.floor(Math.random() * 89999) + 10000);
+      // Use authenticated customer ID if logged in, otherwise generate customer reference
+      const randomCust = user?.customerId
+        ? 'C' + String(user.customerId).padStart(5, '0')
+        : 'C' + String(Math.floor(Math.random() * 89999) + 10000);
       const randomRoom = String(Math.floor(Math.random() * 299) + 1).padStart(3, '0');
 
       const response = await reservationService.createReservation({

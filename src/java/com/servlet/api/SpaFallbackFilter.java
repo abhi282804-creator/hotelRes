@@ -39,6 +39,9 @@ public class SpaFallbackFilter implements Filter {
     }
 
     private boolean isReactRoute(String path) {
+        if (path.startsWith("/api/")) {
+            return false;
+        }
         return "/login".equals(path)
                 || "/signup".equals(path)
                 || "/contact".equals(path)
@@ -46,7 +49,9 @@ public class SpaFallbackFilter implements Filter {
                 || "/reservation/confirm".equals(path)
                 || "/payment".equals(path)
                 || "/payment/status".equals(path)
-                || path.matches("/hotels/[^/]+");
+                || path.matches("/hotels/[^/]+")
+                || "/admin".equals(path)
+                || path.startsWith("/admin/");
     }
 
     @Override

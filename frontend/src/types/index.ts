@@ -19,6 +19,7 @@ export interface Hotel {
 }
 
 export interface User {
+  customerId?: number | string;
   firstName?: string;
   lastName?: string;
   email: string;

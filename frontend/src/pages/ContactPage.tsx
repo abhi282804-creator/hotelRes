@@ -23,7 +23,7 @@ export const ContactPage: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        
+
         {/* Info Box */}
         <div className="bg-brand-900 text-white p-8 rounded-3xl space-y-8 shadow-xl">
           <div>

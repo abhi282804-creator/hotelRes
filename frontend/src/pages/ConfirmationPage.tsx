@@ -40,7 +40,7 @@ export const ConfirmationPage: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="bg-white p-8 sm:p-12 rounded-3xl border border-slate-200/80 shadow-xl space-y-8">
-        
+
         {/* Success Header */}
         <div className="text-center space-y-3">
           <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-md">

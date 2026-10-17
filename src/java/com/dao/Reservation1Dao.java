@@ -1,19 +1,15 @@
 package com.dao;
 
 import com.bean.Reservation1Bean;
+import com.util.DBConnection;
 import java.sql.*;
 
 public class Reservation1Dao {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/hotel";
-    private static final String USER = "root";
-    private static final String PASSWORD = "shetty7639";
-
     public int saveReservation(Reservation1Bean reservation) {
         int status = 0;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
+            Connection con = DBConnection.getConnection();
             String query = "INSERT INTO reservation1 (customerId, roomId, hotelId, checkin, checkout, guests, roomType, specialRequests, priceDisplay) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, reservation.getCustomerId());
@@ -38,8 +34,7 @@ public class Reservation1Dao {
     public int getReservationCount(int hotelId) {
         int count = 0;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
+            Connection con = DBConnection.getConnection();
             // ConfirmReservationDao persists confirmed bookings in reservations.
             // Count that same model so the existing four-booking rule applies
             // to confirmed bookings.

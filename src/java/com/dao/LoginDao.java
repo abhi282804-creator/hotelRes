@@ -1,19 +1,14 @@
 package com.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.bean.LoginBean;
+import com.util.DBConnection;
 
 public class LoginDao {
-
-    // Database connection details
-    private String jdbcURL = "jdbc:mysql://localhost:3306/hotel";
-    private String jdbcUsername = "root";
-    private String jdbcPassword = "NewPassword123!";
 
     // SQL Queries
     private static final String INSERT_USERS_SQL =
@@ -22,19 +17,12 @@ public class LoginDao {
     private static final String SELECT_USER_SQL =
             "SELECT * FROM customers WHERE email = ? AND password = ?";
 
-    // Get the database connection
+    // Get the database connection via centralized DBConnection
     protected Connection getConnection() {
         Connection connection = null;
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            connection = DriverManager.getConnection(
-                    jdbcURL,
-                    jdbcUsername,
-                    jdbcPassword
-            );
-
+            connection = DBConnection.getConnection();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -65,6 +53,66 @@ public class LoginDao {
         }
 
         return status;
+    }
+
+    public static class CustomerRecord {
+        private final int customerId;
+        private final String firstName;
+        private final String lastName;
+        private final String email;
+        private final String phone;
+
+        public CustomerRecord(int customerId, String firstName, String lastName, String email, String phone) {
+            this.customerId = customerId;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+            this.phone = phone;
+        }
+
+        public int getCustomerId() {
+            return customerId;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+    }
+
+    public CustomerRecord getCustomerByEmail(String email) {
+        String sql = "SELECT customer_id, first_name, last_name, email, phone FROM customers WHERE email = ?";
+        try (
+            Connection connection = getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new CustomerRecord(
+                        rs.getInt("customer_id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("email"),
+                        rs.getString("phone")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     // Method to register a new user

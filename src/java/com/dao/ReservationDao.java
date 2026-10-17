@@ -1,17 +1,15 @@
 package com.dao;
 
 import com.bean.Reservationbean;
+import com.util.DBConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationDao {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/reservations";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "password";
 
-    public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+    public Connection getConnection() throws SQLException, ClassNotFoundException {
+        return DBConnection.getConnection();
     }
 
     public List<Reservationbean> getAllReservations() throws SQLException {
@@ -29,6 +27,8 @@ public class ReservationDao {
                 reservation.setRoomType(rs.getString("room_type"));
                 reservations.add(reservation);
             }
+        } catch (ClassNotFoundException e) {
+            throw new SQLException(e.getMessage(), e);
         }
         return reservations;
     }
@@ -39,6 +39,8 @@ public class ReservationDao {
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, reservationId);
             return stmt.executeUpdate() > 0;
+        } catch (ClassNotFoundException e) {
+            throw new SQLException(e.getMessage(), e);
         }
     }
 }

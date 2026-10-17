@@ -28,11 +28,37 @@ public class ApiAuthServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
-        
+
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
             String userEmail = (String) session.getAttribute("user");
-            out.write("{\"authenticated\":true,\"user\":{\"email\":\"" + escapeJson(userEmail) + "\"}}");
+            Integer customerId = (Integer) session.getAttribute("customerId");
+            String firstName = (String) session.getAttribute("customerFirstName");
+            String lastName = (String) session.getAttribute("customerLastName");
+            String phone = (String) session.getAttribute("customerPhone");
+
+            if (customerId == null && userEmail != null) {
+                LoginDao.CustomerRecord cust = loginDao.getCustomerByEmail(userEmail);
+                if (cust != null) {
+                    customerId = cust.getCustomerId();
+                    firstName = cust.getFirstName();
+                    lastName = cust.getLastName();
+                    phone = cust.getPhone();
+                    session.setAttribute("customerId", customerId);
+                    session.setAttribute("customerLegacyId", String.format("C%05d", customerId));
+                    session.setAttribute("customerFirstName", firstName);
+                    session.setAttribute("customerLastName", lastName);
+                    session.setAttribute("customerPhone", phone);
+                }
+            }
+
+            out.write("{\"authenticated\":true,\"user\":{" +
+                "\"email\":\"" + escapeJson(userEmail) + "\"," +
+                "\"customerId\":" + (customerId != null ? customerId : "null") + "," +
+                "\"firstName\":\"" + escapeJson(firstName != null ? firstName : "") + "\"," +
+                "\"lastName\":\"" + escapeJson(lastName != null ? lastName : "") + "\"," +
+                "\"phone\":\"" + escapeJson(phone != null ? phone : "") + "\"" +
+                "}}");
         } else {
             out.write("{\"authenticated\":false}");
         }
@@ -77,7 +103,30 @@ public class ApiAuthServlet extends HttpServlet {
             HttpSession session = request.getSession(true);
             session.setAttribute("user", email.trim());
 
-            out.write("{\"success\":true,\"message\":\"Login successful\",\"user\":{\"email\":\"" + escapeJson(email.trim()) + "\"}}");
+            LoginDao.CustomerRecord cust = loginDao.getCustomerByEmail(email.trim());
+            Integer customerId = null;
+            String firstName = "";
+            String lastName = "";
+            String phone = "";
+            if (cust != null) {
+                customerId = cust.getCustomerId();
+                firstName = cust.getFirstName();
+                lastName = cust.getLastName();
+                phone = cust.getPhone();
+                session.setAttribute("customerId", customerId);
+                session.setAttribute("customerLegacyId", String.format("C%05d", customerId));
+                session.setAttribute("customerFirstName", firstName);
+                session.setAttribute("customerLastName", lastName);
+                session.setAttribute("customerPhone", phone);
+            }
+
+            out.write("{\"success\":true,\"message\":\"Login successful\",\"user\":{" +
+                "\"email\":\"" + escapeJson(email.trim()) + "\"," +
+                "\"customerId\":" + (customerId != null ? customerId : "null") + "," +
+                "\"firstName\":\"" + escapeJson(firstName) + "\"," +
+                "\"lastName\":\"" + escapeJson(lastName) + "\"," +
+                "\"phone\":\"" + escapeJson(phone) + "\"" +
+                "}}");
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             out.write("{\"success\":false,\"message\":\"Invalid email or password\"}");
