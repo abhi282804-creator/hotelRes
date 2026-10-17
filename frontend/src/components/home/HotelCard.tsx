@@ -10,7 +10,7 @@ interface HotelCardProps {
 export const HotelCard: React.FC<HotelCardProps> = ({ hotel }) => {
   return (
     <div className="bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm card-hover-effect flex flex-col justify-between group">
-      
+
       {/* Image Container with Floating Badges */}
       <div className="relative h-56 overflow-hidden bg-slate-100">
         <img

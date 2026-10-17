@@ -83,10 +83,10 @@ export const PaymentPage: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        
+
         {/* Left Column (2 Cols): Payment Options Form */}
         <div className="lg:col-span-2 space-y-8 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-lg">
-          
+
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-xs text-red-700 font-medium flex items-center gap-2">
               <AlertCircle className="w-5 h-5 shrink-0 text-red-500" />
@@ -95,7 +95,7 @@ export const PaymentPage: React.FC = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            
+
             {/* Method Selector */}
             <MethodSelector
               selectedMethod={paymentMethod}

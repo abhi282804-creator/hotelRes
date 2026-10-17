@@ -1,18 +1,15 @@
 package com.dao;
 
 import com.bean.ReservationHotel;
+import com.util.DBConnection;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ReservationHotelDao {
-    private static final String URL = "jdbc:mysql://localhost:3306/Hotel";
-    private static final String USER = "root";
-    private static final String PASSWORD = "shetty7639";
 
-    public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    public Connection getConnection() throws SQLException, ClassNotFoundException {
+        return DBConnection.getConnection();
     }
 
     public boolean saveReservation(ReservationHotel reservation) {
@@ -32,7 +29,7 @@ public class ReservationHotelDao {
             stmt.setString(9, reservation.getPriceRange());
 
             return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             return false;
         }

@@ -14,7 +14,7 @@ export const Navbar: React.FC = () => {
     <header className="sticky top-0 z-50 glass-nav border-b border-slate-800 text-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          
+
           {/* Logo & Brand */}
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent to-accent-light flex items-center justify-center shadow-md shadow-accent/20 group-hover:scale-105 transition-transform duration-300">
@@ -33,8 +33,8 @@ export const Navbar: React.FC = () => {
             <Link
               to="/"
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                isActive('/') 
-                  ? 'bg-accent/20 text-accent-light border border-accent/30 font-semibold' 
+                isActive('/')
+                  ? 'bg-accent/20 text-accent-light border border-accent/30 font-semibold'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
@@ -44,8 +44,8 @@ export const Navbar: React.FC = () => {
             <Link
               to="/reservations"
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${
-                isActive('/reservations') 
-                  ? 'bg-accent/20 text-accent-light border border-accent/30 font-semibold' 
+                isActive('/reservations')
+                  ? 'bg-accent/20 text-accent-light border border-accent/30 font-semibold'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
@@ -56,8 +56,8 @@ export const Navbar: React.FC = () => {
             <Link
               to="/contact"
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${
-                isActive('/contact') 
-                  ? 'bg-accent/20 text-accent-light border border-accent/30 font-semibold' 
+                isActive('/contact')
+                  ? 'bg-accent/20 text-accent-light border border-accent/30 font-semibold'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >

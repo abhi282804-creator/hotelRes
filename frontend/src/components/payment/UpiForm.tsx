@@ -13,7 +13,7 @@ export const UpiForm: React.FC<UpiFormProps> = ({ upiId, onUpiIdChange }) => {
         <Smartphone className="w-4 h-4 text-accent" />
         Enter UPI ID
       </label>
-      
+
       <input
         type="text"
         id="upiId"

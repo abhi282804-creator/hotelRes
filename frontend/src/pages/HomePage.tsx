@@ -3,6 +3,7 @@ import { Hotel } from '../types';
 import { hotelService } from '../services/hotelService';
 import { HeroBanner } from '../components/home/HeroBanner';
 import { SearchBar } from '../components/home/SearchBar';
+import { LocationFilter } from '../components/home/LocationFilter';
 import { CategoryFilter } from '../components/home/CategoryFilter';
 import { PriceRangeSlider } from '../components/home/PriceRangeSlider';
 import { SortDropdown } from '../components/home/SortDropdown';
@@ -16,6 +17,7 @@ export const HomePage: React.FC = () => {
   // Filter state
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedLocation, setSelectedLocation] = useState<string>('all');
   const [minPrice, setMinPrice] = useState<number>(10000);
   const [sortBy, setSortBy] = useState<'price' | 'rating'>('price');
 
@@ -35,6 +37,11 @@ export const HomePage: React.FC = () => {
   useEffect(() => {
     fetchHotels();
   }, []);
+
+  const locations = useMemo(() => {
+    const unique = Array.from(new Set(hotels.map((h) => h.location).filter(Boolean)));
+    return ['all', ...unique];
+  }, [hotels]);
 
   // Filter & Sort Logic matching index.jsp filterHotels() and sortHotels()
   const filteredAndSortedHotels = useMemo(() => {
@@ -58,6 +65,13 @@ export const HomePage: React.FC = () => {
       );
     }
 
+    // Location filter
+    if (selectedLocation !== 'all') {
+      result = result.filter(
+        (h) => h.location.toLowerCase() === selectedLocation.toLowerCase()
+      );
+    }
+
     // Price range filter (data-price >= minPrice && data-price <= maxPrice)
     result = result.filter(
       (h) => h.price >= minPrice && h.price <= 50000
@@ -73,7 +87,7 @@ export const HomePage: React.FC = () => {
     });
 
     return result;
-  }, [hotels, searchTerm, selectedCategory, minPrice, sortBy]);
+  }, [hotels, searchTerm, selectedCategory, selectedLocation, minPrice, sortBy]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -81,8 +95,14 @@ export const HomePage: React.FC = () => {
       <HeroBanner />
 
       {/* Control Bar Section */}
-      <div className="mb-10 space-y-6">
+      <div className="mb-10 space-y-4">
         <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+
+        <LocationFilter
+          locations={locations}
+          selectedLocation={selectedLocation}
+          onSelectLocation={setSelectedLocation}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-center">
           <div className="lg:col-span-2">
@@ -128,3 +148,5 @@ export const HomePage: React.FC = () => {
     </div>
   );
 };
+
+export default HomePage;

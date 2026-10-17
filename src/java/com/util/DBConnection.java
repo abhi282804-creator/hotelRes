@@ -6,18 +6,40 @@ import java.sql.SQLException;
 
 public class DBConnection {
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/hotel";
-    private static final String USER = "root";
-    private static final String PASS = "NewPassword123!";
+    private static final String DEFAULT_DB_URL = "jdbc:mysql://localhost:3306/hotel";
+    private static final String DEFAULT_DB_USER = "root";
+
+    private static String getEnvOrProperty(String name) {
+        String value = System.getenv(name);
+        if (value == null || value.trim().isEmpty()) {
+            value = System.getProperty(name);
+        }
+        return (value != null && !value.trim().isEmpty()) ? value.trim() : null;
+    }
 
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
+        String dbUrl = getEnvOrProperty("HOTEL_DB_URL");
+        if (dbUrl == null) {
+            dbUrl = DEFAULT_DB_URL;
+        }
+
+        String dbUser = getEnvOrProperty("HOTEL_DB_USER");
+        if (dbUser == null) {
+            dbUser = DEFAULT_DB_USER;
+        }
+
+        String dbPassword = getEnvOrProperty("HOTEL_DB_PASSWORD");
+        if (dbPassword == null) {
+            throw new SQLException("Database configuration error: Missing required environment variable 'HOTEL_DB_PASSWORD'.");
+        }
+
         Connection connection = null;
         try {
             // Register JDBC driver
             Class.forName(JDBC_DRIVER);
             
             // Open a connection
-            connection = DriverManager.getConnection(DB_URL, USER, PASS);
+            connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
             
             if (connection != null) {
                 System.out.println("Successfully connected to the database.");

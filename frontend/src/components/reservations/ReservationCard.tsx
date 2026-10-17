@@ -13,7 +13,7 @@ export const ReservationCard: React.FC<ReservationCardProps> = ({
 }) => {
   return (
     <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm card-hover-effect flex flex-col justify-between space-y-5">
-      
+
       <div className="flex items-start justify-between pb-4 border-b border-slate-100">
         <div className="flex items-center space-x-3">
           <div className="p-3 rounded-2xl bg-accent/10 text-accent">

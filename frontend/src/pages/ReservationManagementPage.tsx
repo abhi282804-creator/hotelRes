@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ReservationItem } from '../types';
 import { reservationService } from '../services/reservationService';
 import { ReservationCard } from '../components/reservations/ReservationCard';
 import { CancelModal } from '../components/reservations/CancelModal';
-import { CalendarCheck, AlertCircle, RefreshCw, BookmarkX } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { CalendarCheck, AlertCircle, RefreshCw, BookmarkX, LogIn, UserPlus } from 'lucide-react';
 
 export const ReservationManagementPage: React.FC = () => {
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [reservations, setReservations] = useState<ReservationItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -17,51 +20,39 @@ export const ReservationManagementPage: React.FC = () => {
   const [cancelSuccessMsg, setCancelSuccessMsg] = useState<string | null>(null);
 
   const fetchReservations = async () => {
+    if (!isAuthenticated) {
+      setReservations([]);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
       const data = await reservationService.getAllReservations();
-      if (data && data.length > 0) {
+      if (Array.isArray(data)) {
         setReservations(data);
       } else {
-        // Fallback default reservations list matching Reservation.jsp legacy data
-        setReservations([
-          {
-            reservationId: '1',
-            hotelName: 'Desert Oasis Resort',
-            checkinDate: '2024-11-01',
-            checkoutDate: '2024-11-05',
-            guests: 2,
-            roomType: 'Luxury Suite',
-          },
-          {
-            reservationId: '2',
-            hotelName: 'Forest Cabin Hideaway',
-            checkinDate: '2024-12-10',
-            checkoutDate: '2024-12-15',
-            guests: 4,
-            roomType: 'Deluxe Cabin',
-          },
-          {
-            reservationId: '3',
-            hotelName: 'Riverfront Paradise',
-            checkinDate: '2024-10-28',
-            checkoutDate: '2024-10-31',
-            guests: 3,
-            roomType: 'Riverside Suite',
-          },
-        ]);
+        setReservations([]);
       }
     } catch (err: any) {
       setError(err.message || 'Failed to load reservation history');
+      setReservations([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchReservations();
-  }, []);
+    if (!authLoading) {
+      if (isAuthenticated) {
+        fetchReservations();
+      } else {
+        setReservations([]);
+        setLoading(false);
+      }
+    }
+  }, [isAuthenticated, authLoading, user]);
 
   const handleOpenCancelModal = (res: ReservationItem) => {
     setSelectedRes(res);
@@ -76,12 +67,12 @@ export const ReservationManagementPage: React.FC = () => {
       if (response.success) {
         setCancelSuccessMsg(`Reservation ID #${selectedRes.reservationId} has been successfully canceled.`);
         setReservations((prev) => prev.filter((r) => r.reservationId !== selectedRes.reservationId));
+      } else {
+        setError(response.message || 'Failed to cancel reservation');
       }
     } catch (err: any) {
       console.error('Cancel failed:', err);
-      // Remove from UI state as fallback confirmation
-      setCancelSuccessMsg(`Reservation ID #${selectedRes.reservationId} has been successfully canceled.`);
-      setReservations((prev) => prev.filter((r) => r.reservationId !== selectedRes.reservationId));
+      setError(err.message || 'An error occurred while canceling your reservation.');
     } finally {
       setCancelling(false);
       setIsCancelModalOpen(false);
@@ -91,12 +82,16 @@ export const ReservationManagementPage: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      
+
       {/* Page Header */}
       <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200/80">
         <div>
           <h1 className="font-serif text-3xl font-bold text-brand-900">My Reservations</h1>
-          <p className="text-xs text-slate-500 mt-1">Manage active stays, view booking details, or modify reservations</p>
+          <p className="text-xs text-slate-500 mt-1">
+            {isAuthenticated
+              ? `Logged in as ${user?.firstName ? `${user.firstName} ${user.lastName || ''}` : user?.email}`
+              : 'Sign in to inspect and manage your hotel reservations'}
+          </p>
         </div>
         <div className="p-3 rounded-2xl bg-accent/10 text-accent">
           <CalendarCheck className="w-6 h-6" />
@@ -110,7 +105,33 @@ export const ReservationManagementPage: React.FC = () => {
         </div>
       )}
 
-      {loading ? (
+      {!authLoading && !isAuthenticated ? (
+        <div className="bg-white border border-slate-200/80 rounded-3xl p-12 text-center max-w-lg mx-auto my-12 shadow-sm">
+          <div className="w-14 h-14 bg-accent/10 text-accent rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <LogIn className="w-7 h-7" />
+          </div>
+          <h2 className="font-serif text-2xl font-bold text-brand-900 mb-2">Sign In Required</h2>
+          <p className="text-xs text-slate-600 mb-6 leading-relaxed">
+            Please log in to your account to view your verified booking history, check-in dates, and room details.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              to="/login"
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-accent hover:bg-amber-600 text-white font-semibold text-xs shadow-md shadow-accent/25 transition-all inline-flex items-center justify-center gap-2"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Sign In to Account</span>
+            </Link>
+            <Link
+              to="/signup"
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all inline-flex items-center justify-center gap-2"
+            >
+              <UserPlus className="w-4 h-4" />
+              <span>Create Account</span>
+            </Link>
+          </div>
+        </div>
+      ) : loading || authLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3].map((idx) => (
             <div key={idx} className="bg-white rounded-3xl h-64 p-6 border border-slate-200 animate-pulse" />
@@ -123,7 +144,7 @@ export const ReservationManagementPage: React.FC = () => {
           <p className="text-xs text-red-700 mb-4">{error}</p>
           <button
             onClick={fetchReservations}
-            className="px-4 py-2 rounded-xl bg-red-600 text-white text-xs font-semibold inline-flex items-center gap-1.5"
+            className="px-4 py-2 rounded-xl bg-red-600 text-white text-xs font-semibold inline-flex items-center gap-1.5 cursor-pointer"
           >
             <RefreshCw className="w-4 h-4" /> Retry
           </button>

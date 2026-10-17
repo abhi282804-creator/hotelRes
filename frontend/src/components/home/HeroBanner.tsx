@@ -6,14 +6,14 @@ export const HeroBanner: React.FC = () => {
     <div className="relative overflow-hidden bg-brand-900 text-white rounded-3xl mb-12 border border-slate-800 shadow-2xl">
       {/* Background Subtle Overlay Pattern */}
       <div className="absolute inset-0 bg-gradient-to-r from-brand-950/90 via-brand-900/80 to-accent/20 z-10" />
-      
-      <div 
+
+      <div
         className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay scale-105 transform transition-transform duration-1000"
         style={{ backgroundImage: `url('${import.meta.env.BASE_URL}images/hotel1.jpg')` }}
       />
 
       <div className="relative z-20 max-w-5xl mx-auto px-6 py-16 sm:py-24 text-center">
-        
+
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/20 border border-accent/40 text-accent-light text-xs font-semibold uppercase tracking-widest mb-6">
           <Sparkles className="w-3.5 h-3.5" />

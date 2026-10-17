@@ -16,7 +16,7 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
         <ArrowUpDown className="w-3.5 h-3.5 text-accent" />
         Sort By
       </label>
-      
+
       <select
         id="sortSelect"
         value={sortBy}
